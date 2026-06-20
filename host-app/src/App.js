@@ -5,7 +5,6 @@ function App() {
   const [currentVideo, setCurrentVideo] = useState(null);
   const [queue, setQueue] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [history, setHistory] = useState([]);
   const [roomCode, setRoomCode] = useState("");
   const api = process.env.REACT_APP_API_URL || 'http://localhost:8000';
   console.log("API URL:", api);
@@ -52,7 +51,16 @@ function App() {
     fetchRoomCode();
     fetchNextVideo();
     fetchQueue();
+
+    // Poll for updates
+    const interval = setInterval(() => {
+      fetchNextVideo();
+      fetchQueue();
+    }, 300); // every 300ms
+
+    return () => clearInterval(interval);
   }, []);
+
 
   const onEnd = () => {
     goNext();
