@@ -1,12 +1,18 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function RoomClient({ code }: { code: string }) {
   const api = process.env.NEXT_PUBLIC_API_URL;
+  const router = useRouter();
 
   const [queue, setQueue] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  const leaveRoom = () => {
+    router.push("/");
+  };
 
   const fetchQueue = async () => {
     const res = await fetch(`${api}/queue/list`);
@@ -38,6 +44,21 @@ export default function RoomClient({ code }: { code: string }) {
   return (
     <div style={{ padding: 40, textAlign: "center" }}>
       <h1>Room: {code}</h1>
+      <button 
+        onClick={leaveRoom}
+        style={{
+            marginTop: 20,
+            padding: "10px 20px",
+            fontSize: 18,
+            background: "#444",
+            color: "white",
+            borderRadius: 8,
+            border: "none",
+            cursor: "pointer"
+        }}
+        >
+        Leave Room
+        </button>
 
       <h2>Now Playing</h2>
       <p>{current ? current.title : "Nothing playing"}</p>
