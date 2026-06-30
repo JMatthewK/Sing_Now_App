@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
+import SearchSongs from "@/app/components/search-ui";
+
 export default function RoomClient({ code }: { code: string }) {
   const api = process.env.NEXT_PUBLIC_API_URL;
   const router = useRouter();
@@ -40,6 +42,18 @@ export default function RoomClient({ code }: { code: string }) {
   const current = queue[currentIndex];
   const upNext = queue.slice(currentIndex + 1);
   const recentlyPlayed = queue.slice(0, currentIndex);
+
+  // Queue management functions (add, remove, etc.) can be added here
+  const addToQueue = async (song) => {
+    await fetch(`${api}/queue/add`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(song),
+    });
+    fetchQueue(); // refresh the queue after adding a song
+  };
 
   return (
     <div style={{ padding: 40, textAlign: "center" }}>
@@ -87,6 +101,8 @@ export default function RoomClient({ code }: { code: string }) {
       {recentlyPlayed.map((song, i) => (
         <p key={i}>{song.title}</p>
       ))}
+
+      <SearchSongs api={api} onAdd={addToQueue} />
     </div>
   );
 }
