@@ -1,5 +1,6 @@
 import requests
 
+from config import YOUTUBE_API_KEY
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
